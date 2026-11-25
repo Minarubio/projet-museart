@@ -234,3 +234,37 @@ h1{font-size:clamp(64px,22vw,95px)}
 .modal-copy{padding:60px 28px 40px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+#menu-toggle,
+.collection > input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+#menu-toggle:focus-visible ~ .header-actions .menu-button {
+  outline: 2px solid var(--wine);
+  outline-offset: 4px;
+}
+#f-all:focus-visible ~ .filters label[for="f-all"],
+#f-paysage:focus-visible ~ .filters label[for="f-paysage"],
+#f-portrait:focus-visible ~ .filters label[for="f-portrait"],
+#f-nature:focus-visible ~ .filters label[for="f-nature"] {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+.menu-button:focus-visible,
+.filters label:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+}
+section[id],
+main[id] {
+  scroll-margin-top: 110px;
+}
