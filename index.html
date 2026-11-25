@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Pompiere&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<meta property="og:title" content="Museart – Galerie d’art">
+<meta property="og:description" content="Découvrez les œuvres et les expositions de la galerie Museart à Paris.">
+<meta property="og:type" content="website">
 </head>
 <body>
 <main id="accueil">
@@ -15,8 +18,12 @@
 
 <header class="site-header">
 <a class="logo" href="#accueil" aria-label="Museart, accueil"><span class="logo-main">Musée</span><span class="logo-art">ART</span><span class="logo-signature"><small>Depuis</small><small>Galerie d’art</small><small>1994</small></span></a>
-<input type="checkbox" id="menu-toggle" hidden>
-<nav class="nav" aria-label="Navigation principale">
+<input type="checkbox" id="menu-toggle"
+aria-label="Afficher le menu de navigation"
+aria-controls="main-navigation">
+  
+<nav class="nav" id="main-navigation"
+aria-label="Navigation principale">
 <a href="#oeuvres">Œuvres</a><a href="#exposition">Expositions</a><a href="#artistes">Artistes</a><a href="#archives">Ancienne collection</a><a href="#visiter">Visiter</a>
 </nav>
 <div class="header-actions">
@@ -67,7 +74,10 @@
 </section>
 
 <section class="collection" id="oeuvres">
-<input type="radio" name="filtre" id="f-all" checked hidden><input type="radio" name="filtre" id="f-paysage" hidden><input type="radio" name="filtre" id="f-portrait" hidden><input type="radio" name="filtre" id="f-nature" hidden>
+<input type="radio" name="filtre" id="f-all" checked aria-label="Afficher toutes les œuvres">
+<input type="radio" name="filtre" id="f-paysage" aria-label="Filtrer par paysage">
+<input type="radio" name="filtre" id="f-portrait" aria-label="Filtrer par portrait">
+<input type="radio" name="filtre" id="f-nature" aria-label="Filtrer par nature morte">
 <div class="section-heading"><div><p class="eyebrow">La sélection de la galerie</p><h2>Œuvres à découvrir</h2></div><p class="collection-count">08 œuvres</p></div>
 <div class="filters" role="group" aria-label="Filtrer les œuvres">
 <label for="f-all">Toutes</label><label for="f-paysage">Paysage</label><label for="f-portrait">Portrait</label><label for="f-nature">Nature morte</label>
@@ -141,8 +151,8 @@
 <section class="archives" id="archives">
 <div class="archive-heading"><p class="eyebrow">Les saisons passées</p><h2>Ancienne<br><em>collection</em></h2><p>Retrouvez une sélection d’œuvres précédemment présentées par la galerie. Les archives restent consultables sur rendez-vous.</p></div>
 <div class="archive-grid">
-<article><div><img src="images1/tulipes.jpg" alt="Matières intimes I"><span>01</span></div><p>Collection 2024</p><h3>Matières intimes I</h3></article>
-<article><div><img src="images1/portrait%20blanc.jpg" alt="Matières intimes II"><span>02</span></div><p>Collection 2024</p><h3>Matières intimes II</h3></article>
+<article><div><<img src="images1/tulipes.jpg" alt="Composition florale avec des tulipes, œuvre d’Antoine Monnoyer"><span>01</span></div><p>Collection 2024</p><h3>Matières intimes I</h3></article>
+<article><div><<img src="images1/portrait%20blanc.jpg" alt="Portrait féminin peint par Jane Atché"><span>02</span></div><p>Collection 2024</p><h3>Matières intimes II</h3></article>
 </div>
 </section>
 
@@ -227,5 +237,69 @@
 <p class="body-copy">Œuvre originale signée, livrée avec son certificat d’authenticité. Livraison en France métropolitaine ou retrait gratuit à la galerie.</p>
 <a class="link-button" href="mailto:bonjour@museart.fr?subject=Demande%20-%20Vase%20de%20fleurs%20sur%20un%20entablement%20en%20pierre"><span>Demander plus d’informations</span><span>→</span></a></div></div></div>
 </main>
+  <script>
+(() => {
+  let lastTrigger = null;
+
+  const getModal = () => document.querySelector('.art-modal:target');
+
+  const getFocusable = (container) =>
+    Array.from(container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.getClientRects().length > 0);
+
+  const focusModal = () => {
+    const modal = getModal();
+    if (modal) {
+      modal.querySelector('.modal-close').focus();
+    }
+  };
+
+  document.querySelectorAll('a[href^="#oeuvre-"]').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      lastTrigger = trigger;
+    });
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (location.hash.startsWith('#oeuvre-')) {
+      requestAnimationFrame(focusModal);
+    } else if (lastTrigger) {
+      lastTrigger.focus();
+      lastTrigger = null;
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    const modal = getModal();
+    if (!modal) return;
+
+    if (event.key === 'Escape') {
+      location.hash = '#oeuvres';
+      return;
+    }
+
+    if (event.key === 'Tab') {
+      const elements = getFocusable(modal);
+      if (!elements.length) return;
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  if (location.hash.startsWith('#oeuvre-')) {
+    requestAnimationFrame(focusModal);
+  }
+})();
+</script>
 </body>
 </html>
