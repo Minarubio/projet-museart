@@ -139,7 +139,8 @@ h2{margin-bottom:0;font:400 clamp(58px,7vw,112px)/.82 var(--display)}
 .archive-heading h2{margin-bottom:35px}
 .archive-heading>p:last-child{max-width:390px;font-size:20px;line-height:1.5}
 .archive-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px 26px}
-.archive-grid article:nth-child(3){grid-column:1/-1;width:65%;justify-self:end}
+.archive-grid article{min-width:0}
+.archive-grid article>div{height:420px;width:100%;padding:25px;position:relative;display:grid;place-items:center;overflow:hidden;background:var(--grey);filter:saturate(.5);transition:filter .25s ease}
 .archive-grid article>div{height:420px;padding:25px;position:relative;display:grid;place-items:center;background:var(--grey);filter:saturate(.5);transition:filter .25s ease}
 .archive-grid article:hover>div{filter:saturate(1)}
 .archive-grid img{width:100%;height:100%;object-fit:contain}
