@@ -1,1 +1,62 @@
+(() => {
+  let lastTrigger = null;
 
+  const getModal = () => document.querySelector('.art-modal:target');
+
+  const getFocusable = (container) =>
+    Array.from(container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.getClientRects().length > 0);
+
+  const focusModal = () => {
+    const modal = getModal();
+    if (modal) {
+      modal.querySelector('.modal-close').focus();
+    }
+  };
+
+  document.querySelectorAll('a[href^="#oeuvre-"]').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      lastTrigger = trigger;
+    });
+  });
+
+  window.addEventListener('hashchange', () => {
+    if (location.hash.startsWith('#oeuvre-')) {
+      requestAnimationFrame(focusModal);
+    } else if (lastTrigger) {
+      lastTrigger.focus();
+      lastTrigger = null;
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    const modal = getModal();
+    if (!modal) return;
+
+    if (event.key === 'Escape') {
+      location.hash = '#oeuvres';
+      return;
+    }
+
+    if (event.key === 'Tab') {
+      const elements = getFocusable(modal);
+      if (!elements.length) return;
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  if (location.hash.startsWith('#oeuvre-')) {
+    requestAnimationFrame(focusModal);
+  }
+})();
